@@ -67,37 +67,37 @@ alias gprune='git fetch -p && git branch --merged | grep -v "\*\|main\|master" |
 complete -c gprune -w git-fetch
 
 function gcmp
-  git log --oneline --graph "$argv[1]..$argv[2]"
+	git log --oneline --graph "$argv[1]..$argv[2]"
 end
 complete -c gcmp -a "(git branch --format='%(refname:short)')" -d "Git branch"
 
 function gsquash
-  git rebase -i (git rev-list --max-parents=0 HEAD)
+	git rebase -i (git rev-list --max-parents=0 HEAD)
 end
 complete -c gsquash -a "(git branch --format='%(refname:short)')" -d "Git branch"
 
 function gxcl
-  git reset --hard && \
-  git clean -ffdx && \
-  git submodule sync --recursive && \
-  git submodule update --init --recursive --force && \
-  git submodule foreach --recursive git clean -ffdx && \
-  git checkout --force
+	git reset --hard && \
+	git clean -ffdx && \
+	git submodule sync --recursive && \
+	git submodule update --init --recursive --force && \
+	git submodule foreach --recursive git clean -ffdx && \
+	git checkout --force
 end
 complete -c gxcl -a "(git branch --format='%(refname:short)')" -d "Git branch"
 
 function gxclFULL
-  git reset --hard --recurse-submodules && \
-  git lfs fetch --all && \
-  git lfs prune && \
-  git add --renormalize . && \
-  git stash --include-untracked && \
-  git clean -ffdx && \
-  git reflog expire --all --expire='2.weeks.ago' --expire-unreachable='now' && \
-  git gc --prune=now && \
-  git submodule sync --recursive && \
-  git submodule update --init --recursive --force && \
-  git submodule foreach --recursive git clean -ffdx && \
-  git checkout --force
+	git reset --hard --recurse-submodules && \
+	git lfs fetch --all && \
+	git lfs prune && \
+	git add --renormalize . && \
+	git stash --include-untracked && \
+	git clean -ffdx && \
+	git reflog expire --all --expire='2.weeks.ago' --expire-unreachable='now' && \
+	git gc --prune=now && \
+	git submodule sync --recursive && \
+	git submodule update --init --recursive --force && \
+	git submodule foreach --recursive git clean -ffdx && \
+	git checkout --force
 end
 complete -c gxclFULL -a "(git branch --format='%(refname:short)')" -d "Git branch" 
