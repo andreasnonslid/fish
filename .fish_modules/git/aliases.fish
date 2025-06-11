@@ -71,17 +71,31 @@ function gcmp
 end
 complete -c gcmp -a "(git branch --format='%(refname:short)')" -d "Git branch"
 
-function gsquash
-    git rebase -i (git rev-list --max-parents=0 HEAD)
-end
-complete -c gsquash -a "(git branch --format='%(refname:short)')" -d "Git branch"
+alias gsquash="git rebase -i (git rev-list --max-parents=0 HEAD)"
 
 function gxcl
-    git reset --hard && git clean -ffdx && git submodule sync --recursive && git submodule update --init --recursive --force && git submodule foreach --recursive git clean -ffdx && git checkout --force
+    # Hard-reset working tree
+    git reset --hard
+    and git clean -ffdx
+    and git submodule sync --recursive
+    and git submodule update --init --recursive --force
+    and git submodule foreach --recursive git clean -ffdx
+    and git checkout --force
 end
-complete -c gxcl -a "(git branch --format='%(refname:short)')" -d "Git branch"
 
 function gxclFULL
-    git reset --hard --recurse-submodules && git lfs fetch --all && git lfs prune && git add --renormalize . && git stash --include-untracked && git clean -ffdx && git reflog expire --all --expire='2.weeks.ago' --expire-unreachable='now' && git gc --prune=now && git submodule sync --recursive && git submodule update --init --recursive --force && git submodule foreach --recursive git clean -ffdx && git checkout --force
+    # Hard-reset including submodules
+    git reset --hard --recurse-submodules
+    and git lfs fetch --all
+    and git lfs prune
+    and git add --renormalize .
+    and git stash --include-untracked
+    and git clean -ffdx
+    and git reflog expire --all --expire='2.weeks.ago' --expire-unreachable='now'
+    and git gc --prune=now
+    and git submodule sync --recursive
+    and git submodule update --init --recursive --force
+    and git submodule foreach --recursive git clean -ffdx
+    and git checkout --force
 end
-complete -c gxclFULL -a "(git branch --format='%(refname:short)')" -d "Git branch"
+

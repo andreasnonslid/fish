@@ -31,3 +31,15 @@ if status is-interactive
         end
     end
 end
+
+# 1. Tell Fish where pyenv lives
+set -gx PYENV_ROOT $HOME/.pyenv
+
+# 2. Prepend pyenv shims and bin to PATH
+set -gx PATH $PYENV_ROOT/shims $PYENV_ROOT/bin $PATH
+
+# 3. Ensure shims are activated for login shells
+status is-login; and source (pyenv init --path | psub)
+
+# 4. Enable full pyenv in interactive shells (completions, 'pyenv shell', etc.)
+status is-interactive; and source (pyenv init - | psub)
