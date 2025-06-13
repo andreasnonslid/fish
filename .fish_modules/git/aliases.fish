@@ -1,78 +1,174 @@
-# Fish Git aliases
+# add
+alias a='git add'
+alias aa='a --all'
+alias au='a --update'
+complete -c a -w git-add
+complete -c aa -w git-add
+complete -c au -w git-add
 
-alias gs="git status --untracked-files=normal"
-complete -c gs -w git-status
+# branch
+alias b='git branch'
+alias bb='b --all'
+alias bv='b -vv'
+alias bd='b -d'
+alias bsu='b --set-upstream-to'
+complete -c b -w git-branch
+complete -c bb -w git-branch
+complete -c bv -w git-branch
+complete -c bd -w git-branch
+complete -c bsu -w git-branch
 
-alias ga="git add"
-complete -c ga -w git-add
+# checkout
+alias ch='git checkout'
+complete -c ch -w git-checkout
 
-alias gc="git commit"
-complete -c gc -w git-commit
+# clone
+alias cl='git clone'
+complete -c cl -w git-clone
 
-alias gcm="git commit -m"
-complete -c gcm -w git-commit
+# commit
+alias c='git commit'
+alias ca='c --amend'
+alias cf='c --fixup'
+complete -c c -w git-commit
+complete -c ca -w git-commit
+complete -c cf -w git-commit
 
-alias gco="git checkout"
-complete -c gco -w git-checkout
+# diff
+alias d='git diff'
+alias dc='git diff --cached'
+alias dh='d HEAD'
+alias dw='d --word-diff'
+complete -c d -w git-diff
+complete -c dc -w git-diff
+complete -c dh -w git-diff
+complete -c dw -w git-diff
 
-alias gsb="git switch -c"
-complete -c gsb -w git-switch
+# init
+alias i='git init'
+complete -c i -w git-init
 
-alias gsw="git switch"
-complete -c gsw -w git-switch
+# log
+alias lg='git log --graph --oneline --decorate --all'
+alias lgu='git log --graph --oneline @{u}..HEAD'
+alias log='git log --pretty=format:"%h %ad %s" --date=short --all'
+alias logo='git log --oneline'
+complete -c lg -w git-log
+complete -c lgu -w git-log
+complete -c log -w git-log
+complete -c logo -w git-log
 
-alias gp="git push"
-complete -c gp -w git-push
+# merge
+alias m='git merge'
+alias ma='m --abort'
+alias mc='m --continue'
+complete -c m -w git-merge
+complete -c ma -w git-merge
+complete -c mc -w git-merge
 
-alias gpl="git pull"
-complete -c gpl -w git-pull
+# pull
+alias pl='git pull'
+complete -c pl -w git-pull
 
-alias gr="git rebase"
-complete -c gr -w git-rebase
+# push
+alias p='git push'
+complete -c p -w git-push
 
-alias grs="git restore"
-complete -c grs -w git-restore
+# rebase
+alias r='git rebase'
+alias ri='git rebase -i'
+complete -c r -w git-rebase
+complete -c ri -w git-rebase
 
-alias gb="git branch"
-complete -c gb -w git-branch
+# reflog
+alias ref='git reflog'
+complete -c ref -w git-reflog
 
-alias gf="git fetch"
-complete -c gf -w git-fetch
+# remote
+alias re='git remote'
+complete -c re -w git-remote
 
-alias gds="git diff --staged"
-complete -c gds -w git-diff
-
-alias gfp="git fetch --prune"
-complete -c gfp -w git-fetch
-
-alias gca="git commit --amend --no-edit"
-complete -c gca -w git-commit
-
-alias gl="git log --oneline --graph --all --decorate"
-complete -c gl -w git-log
-
-alias grsall="git restore ."
-complete -c grsall -w git-restore
-
-alias grsstaged="git restore --staged"
-complete -c grsstaged -w git-restore
-
-alias glast="git log -p -1"
-complete -c glast -w git-log
-
-alias gundo="git reset --soft HEAD~1"
-complete -c gundo -w git-reset
-
-alias gprune='git fetch -p && git branch --merged | grep -v "\*\|main\|master" | xargs -n 1 git branch -d'
-complete -c gprune -w git-fetch
-
-function gcmp
-    git log --oneline --graph "$argv[1]..$argv[2]"
+# reset
+function __gr-reset --description "git reset wrapper"
+    set -l mode $argv[1]      # soft|hard
+    set -l target $argv[2]    # N commits or ref
+    test -z "$target"; and set target 1
+    git reset --$mode "HEAD~$target"
 end
-complete -c gcmp -a "(git branch --format='%(refname:short)')" -d "Git branch"
+function rs --description "soft-reset HEAD~N (default 1)"
+    __gr-reset soft $argv[1]
+end
+function rh --description "hard-reset HEAD~N (default 1)"
+    __gr-reset hard $argv[1]
+end
+function __gr-upstream-ref
+    echo origin/(git branch --show-current)
+end
+function rsu --description "soft-reset to upstream"
+    git reset --soft (__gr-upstream-ref)
+end
+function rhu --description "hard-reset to upstream"
+    git reset --hard (__gr-upstream-ref)
+end
+alias r="git reset"
+complete -c r -w git-reset
+complete -c rs  -d "soft reset HEAD~N"  -a "1 2 3 4 5"
+complete -c rh  -d "hard reset HEAD~N"  -a "1 2 3 4 5"
+complete -c rsu -d "soft reset to upstream"
+complete -c rhu -d "hard reset to upstream"
 
-alias gsquash="git rebase -i (git rev-list --max-parents=0 HEAD)"
+# show
+alias sh='git show'
+complete -c sh -w git-show
 
+# stash
+alias st='git stash'
+alias sp='st pop'
+alias stl='st list'
+alias std='st drop'
+alias stc='st clear'
+alias stp='st push'
+alias sta='st apply'
+complete -c st -w git-stash
+complete -c sp -w git-stash
+complete -c stl -w git-stash
+complete -c std -w git-stash
+complete -c stc -w git-stash
+complete -c stp -w git-stash
+complete -c sta -w git-stash
+
+# status
+alias s='git status'
+alias ss='git status --short'
+complete -c s -w git-status
+complete -c ss -w git-status
+
+# submodule
+alias sub='git submodule'
+alias subi='sub init'
+alias subu='sub update'
+alias suba='sub add'
+complete -c sub -w git-submodule
+complete -c subi -w git-submodule
+complete -c subu -w git-submodule
+complete -c suba -w git-submodule
+
+# switch
+alias sw="git switch"
+complete -c sw -w git-switch
+
+# tag
+alias t="git tag"
+alias ta="t -a"
+complete -c t -w git-tag
+complete -c ta -w git-tag
+
+# xtras
+function aac
+    aa
+    set msg (string join ' ' -- $argv)
+    c -m "$msg"
+end
 function gxcl
     # Hard-reset working tree
     git reset --hard
@@ -82,7 +178,6 @@ function gxcl
     and git submodule foreach --recursive git clean -ffdx
     and git checkout --force
 end
-
 function gxclFULL
     # Hard-reset including submodules
     git reset --hard --recurse-submodules
@@ -98,4 +193,3 @@ function gxclFULL
     and git submodule foreach --recursive git clean -ffdx
     and git checkout --force
 end
-
