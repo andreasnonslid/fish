@@ -110,8 +110,6 @@ end
 function rhu --description "hard-reset to upstream"
     git reset --hard (__gr-upstream-ref)
 end
-alias r="git reset"
-complete -c r -w git-reset
 complete -c rs  -d "soft reset HEAD~N"  -a "1 2 3 4 5"
 complete -c rh  -d "hard reset HEAD~N"  -a "1 2 3 4 5"
 complete -c rsu -d "soft reset to upstream"
